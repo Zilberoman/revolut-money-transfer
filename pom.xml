@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.money-transfer</groupId>
+    <artifactId>revolut-money-transfer</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+
+        <guice.version>4.2.2</guice.version>
+        <jooq.version>3.12.1</jooq.version>
+        <mysql.version>8.0.17</mysql.version>
+        <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
+        <spark.version>2.9.1</spark.version>
+        <gson.version>2.8.6</gson.version>
+        <junit.version>4.13-beta-3</junit.version>
+        <httpclient.version>4.5.10</httpclient.version>
+        <javax.version>2.1.1</javax.version>
+
+        <jdbc.user>root</jdbc.user>
+        <jdbc.password>zilberman0223</jdbc.password>
+        <jdbc.url>jdbc:mysql://localhost:3306/Accounts?serverTimezone=UTC</jdbc.url>
+        <jdbc.driver>com.mysql.cj.jdbc.Driver</jdbc.driver>
+    </properties>
+
+    <dependencies>
+        <!-- Guice -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+
+        <!-- Jooq -->
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>${jooq.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-meta</artifactId>
+            <version>${jooq.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-codegen</artifactId>
+            <version>${jooq.version}</version>
+        </dependency>
+
+        <!-- MySql -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+        </dependency>
+
+        <!-- Spark -->
+        <dependency>
+            <groupId>com.sparkjava</groupId>
+            <artifactId>spark-core</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+
+        <!-- GSON -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
+
+        <!-- JUnit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <!-- httpclient for tests -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- javax for tests -->
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>${javax.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-client -->
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-client</artifactId>
+            <version>4.3.1.Final</version>
+        </dependency>
+
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>${jooq.version}</version>
+
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <jdbc>
+                        <driver>${jdbc.driver}</driver>
+                        <url>${jdbc.url}</url>
+                        <user>${jdbc.user}</user>
+                        <password>${jdbc.password}</password>
+                    </jdbc>
+
+                    <generator>
+                        <database>
+                            <name>org.jooq.meta.mysql.MySQLDatabase</name>
+                            <includes>.*</includes>
+                            <inputSchema>accounts</inputSchema>
+                        </database>
+                        <target>
+                            <packageName>com.moneytransfer.model</packageName>
+                            <directory>src/main/java/</directory>
+                        </target>
+                    </generator>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec-maven-plugin.version}</version>
+
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <systemProperties>
+                        <systemProperty>
+                            <key>jdbc.driver</key>
+                            <value>${jdbc.driver}</value>
+                        </systemProperty>
+                        <systemProperty>
+                            <key>jdbc.user</key>
+                            <value>${jdbc.user}</value>
+                        </systemProperty>
+                        <systemProperty>
+                            <key>jdbc.password</key>
+                            <value>${jdbc.password}</value>
+                        </systemProperty>
+                        <systemProperty>
+                            <key>jdbc.url</key>
+                            <value>${jdbc.url}</value>
+                        </systemProperty>
+                    </systemProperties>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>9</source>
+                    <target>9</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
