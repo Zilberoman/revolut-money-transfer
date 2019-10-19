@@ -7,6 +7,22 @@ import com.moneytransfer.service.AccountsService;
 import com.moneytransfer.service.UserService;
 import org.jooq.exception.IOException;
 
+/**
+ * Task is completed
+ * BigDecimal amount, but database type is wrong
+ *
+ * However, I regret to inform you that after much consideration
+ * we have decided not to progress further with your application due to some critical issues that we've found:
+     * Database is not in-memory (MySql)
+     * Balance is double in database
+     * Build and tests do not work without started database
+     * Not enough test cases for money transfer
+     * Verbs in resources URLs
+     * Negative amount transfers are possible
+     * Non-thread safe solution
+     * Accounts are not linked with users
+     * Users seem to be redundant entity
+ */
 import static spark.Spark.*;
 
 public class Application {
